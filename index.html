@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- SEO OPTIMIZATION METAS -->
     <title id="page-title">Hassan TikTok Downloader Pro - DEVELOP BY HASSAN FF</title>
-    <meta name="description" content="Download TikTok videos without watermark, extract MP3 audio, bulk download, slideshows, and profiles instantly using Hassan FF Toolkit.">
-    <meta name="keywords" content="TikTok Downloader, No Watermark TikTok, MP3 Audio Extractor, Hassan FF, Bulk TikTok Downloader, TikTok Slideshow Downloader">
+    <meta name="description" content="Download TikTok videos without watermark, extract MP3 audio, bulk download, slideshows, QR codes, and profiles instantly using Hassan FF Toolkit.">
+    <meta name="keywords" content="TikTok Downloader, No Watermark TikTok, MP3 Audio Extractor, Hassan FF, QR Code Generator, Favorites Bookmarks">
     <meta name="author" content="HASSAN FF">
     
     <!-- Tailwind CSS CDN -->
@@ -191,7 +191,7 @@
                 </a>
             </div>
 
-            <!-- ADVANCED TOOLS IN MENU (Bulk, Slideshow, Profile) -->
+            <!-- ADVANCED TOOLS IN MENU (Bulk, Slideshow, Profile, QR Code, Favorites) -->
             <div class="mt-3 space-y-1.5">
                 <p class="text-[10px] font-semibold text-cyan-400 uppercase tracking-wider">Advanced Downloader Tools</p>
                 <button onclick="openToolModal('bulk'); toggleMenu();" class="w-full text-left p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-200 hover:text-cyan-400 flex items-center justify-between">
@@ -204,6 +204,14 @@
                 </button>
                 <button onclick="openToolModal('profile'); toggleMenu();" class="w-full text-left p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-200 hover:text-cyan-400 flex items-center justify-between">
                     <span><i class="fa-solid fa-user-shield text-amber-400 mr-2"></i>Profile / Account Downloader</span>
+                    <i class="fa-solid fa-chevron-right text-[10px] text-slate-500"></i>
+                </button>
+                <button onclick="openToolModal('qrcode'); toggleMenu();" class="w-full text-left p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-200 hover:text-cyan-400 flex items-center justify-between">
+                    <span><i class="fa-solid fa-qrcode text-emerald-400 mr-2"></i>QR Code For TikTok Link</span>
+                    <i class="fa-solid fa-chevron-right text-[10px] text-slate-500"></i>
+                </button>
+                <button onclick="openToolModal('favorites'); toggleMenu();" class="w-full text-left p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-200 hover:text-cyan-400 flex items-center justify-between">
+                    <span><i class="fa-solid fa-heart text-rose-400 mr-2"></i>Favorites & Bookmarks</span>
                     <i class="fa-solid fa-chevron-right text-[10px] text-slate-500"></i>
                 </button>
             </div>
@@ -331,7 +339,7 @@
             <p class="text-slate-300 text-xs font-medium mt-3 animate-pulse">Fetching video data...</p>
         </div>
 
-        <!-- RESULT SECTION (RIGHT BELOW INPUT & ABOVE HISTORY) -->
+        <!-- RESULT SECTION WITH BUILT-IN AUTO VIDEO/AUDIO PREVIEW PLAYER -->
         <div id="result-container" class="hidden w-full glass-card p-4 rounded-2xl shadow-xl border border-slate-700/60 animate-fadeIn mb-6">
             <div class="flex flex-col gap-4">
                 <!-- Account Info Header -->
@@ -343,15 +351,15 @@
                             <span id="author-id" class="text-[10px] text-cyan-400 font-medium"></span>
                         </div>
                     </div>
-                    <span class="text-[9px] px-2 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300 font-semibold uppercase">TikTok User</span>
+                    <!-- Favorite Bookmark Button -->
+                    <button onclick="toggleCurrentFavorite()" id="fav-btn" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-500 flex items-center justify-center transition" title="Save to Favorites">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
                 </div>
 
-                <!-- Video Cover & Preview -->
-                <div class="w-full relative rounded-xl overflow-hidden border border-slate-700">
-                    <img id="vid-cover" src="" alt="Thumbnail" class="w-full h-48 object-cover">
-                    <a id="preview-play-btn" href="#" target="_blank" class="absolute inset-0 m-auto w-10 h-10 rounded-full dynamic-btn text-white flex items-center justify-center shadow-lg">
-                        <i class="fa-solid fa-play text-sm ml-0.5"></i>
-                    </a>
+                <!-- Auto Video / Audio Preview Player -->
+                <div class="w-full relative rounded-xl overflow-hidden border border-slate-700 bg-black">
+                    <video id="preview-video-player" controls class="w-full h-52 object-contain" poster=""></video>
                 </div>
 
                 <!-- Description / Caption with Copy Button -->
@@ -386,7 +394,7 @@
                     </div>
                 </div>
 
-                <!-- Action Links (Exact requested buttons) -->
+                <!-- Action Links & Direct Share Buttons -->
                 <div class="flex flex-col gap-2 pt-1">
                     <a id="download-nwm" href="#" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-center font-semibold rounded-xl text-xs flex items-center justify-center space-x-2 shadow">
                         <i class="fa-solid fa-video"></i>
@@ -404,11 +412,23 @@
                         <i class="fa-solid fa-film"></i>
                         <span>DOWNLOAD WITH WATERMARK</span>
                     </a>
+
+                    <!-- DIRECT SHARE TO WHATSAPP & TELEGRAM -->
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <button onclick="shareToWhatsApp()" class="py-2.5 bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 text-center font-medium rounded-xl text-[11px] border border-emerald-500/40 flex items-center justify-center space-x-1.5">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+                            <span>Share WhatsApp</span>
+                        </button>
+                        <button onclick="shareToTelegram()" class="py-2.5 bg-sky-600/30 hover:bg-sky-600/50 text-sky-300 text-center font-medium rounded-xl text-[11px] border border-sky-500/40 flex items-center justify-center space-x-1.5">
+                            <i class="fa-brands fa-telegram text-sm"></i>
+                            <span>Share Telegram</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- DOWNLOAD HISTORY SECTION (LOWER DOWN THE PAGE) -->
+        <!-- DOWNLOAD HISTORY SECTION -->
         <section id="history-section" class="w-full mb-6">
             <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center space-x-2">
@@ -441,7 +461,7 @@
             </form>
         </section>
 
-        <!-- SOCIAL SHARE PLATFORMS HUB WITH 1-CLICK COPY -->
+        <!-- SOCIAL SHARE PLATFORMS HUB WITH CUSTOM USER HANDLES -->
         <section class="w-full mb-6 glass-card p-4 rounded-2xl border border-slate-800">
             <div class="flex items-center space-x-2 mb-3">
                 <i class="fa-solid fa-share-nodes text-cyan-400 text-sm"></i>
@@ -451,42 +471,42 @@
                 <!-- TikTok -->
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
                     <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-tiktok text-pink-400"></i><span>TikTok</span></span>
-                    <button onclick="copyPlatformLink('https://tiktok.com/@hassanff')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
+                    <button onclick="copyPlatformLink('https://tiktok.com/@maryo3211')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
                 </div>
                 <!-- YouTube -->
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
                     <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-youtube text-red-500"></i><span>YouTube</span></span>
-                    <button onclick="copyPlatformLink('https://youtube.com/@hassanff')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
+                    <button onclick="copyPlatformLink('https://youtube.com/@vkdongaming678')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
                 </div>
                 <!-- WhatsApp -->
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
                     <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-whatsapp text-emerald-400"></i><span>WhatsApp</span></span>
-                    <button onclick="copyPlatformLink('https://whatsapp.com/channel/0029VbDRJh789ine9bjCVF3m')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
-                </div>
-                <!-- Twitter -->
-                <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
-                    <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-twitter text-sky-400"></i><span>Twitter</span></span>
-                    <button onclick="copyPlatformLink('https://twitter.com/hassanff')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
+                    <button onclick="copyPlatformLink('https://wa.me/923372938160')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
                 </div>
                 <!-- GitHub -->
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
                     <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-github text-purple-400"></i><span>GitHub</span></span>
-                    <button onclick="copyPlatformLink('https://github.com/hassanff')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
+                    <button onclick="copyPlatformLink('https://github.com/hassan-ff-max')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
                 </div>
                 <!-- Instagram -->
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
                     <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-instagram text-pink-500"></i><span>Instagram</span></span>
-                    <button onclick="copyPlatformLink('https://instagram.com/hassanff')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
+                    <button onclick="copyPlatformLink('https://instagram.com/end_hassan_ff')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
                 </div>
                 <!-- Facebook -->
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
                     <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-facebook text-blue-500"></i><span>Facebook</span></span>
-                    <button onclick="copyPlatformLink('https://facebook.com/hassanff')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
+                    <button onclick="copyPlatformLink('https://www.facebook.com/share/14rXJyjstSm/')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
                 </div>
-                <!-- Telegram -->
+                <!-- Telegram 1st Account -->
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
-                    <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-telegram text-sky-400"></i><span>Telegram</span></span>
-                    <button onclick="copyPlatformLink('https://t.me/hassan1updates')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
+                    <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-telegram text-sky-400"></i><span>Telegram 1st</span></span>
+                    <button onclick="copyPlatformLink('https://t.me/hassanff01')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
+                </div>
+                <!-- Telegram 2nd Account -->
+                <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
+                    <span class="text-[11px] text-white font-medium flex items-center space-x-1.5"><i class="fa-brands fa-telegram text-sky-400"></i><span>Telegram 2nd</span></span>
+                    <button onclick="copyPlatformLink('https://t.me/HASSAN_1M_FF')" class="text-[10px] px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded border border-slate-700">Copy</button>
                 </div>
             </div>
         </section>
@@ -547,7 +567,7 @@
         <p>© 2026 Hassan Toolkit. All rights reserved. DEVELOP BY HASSAN FF.</p>
     </footer>
 
-    <!-- ADVANCED TOOLS MODAL (Bulk, Slideshow, Profile) -->
+    <!-- ADVANCED TOOLS MODAL (Bulk, Slideshow, Profile, QR Code, Favorites) -->
     <div id="tool-modal" class="hidden fixed inset-0 glass-modal z-50 flex items-center justify-center p-4">
         <div class="glass-card max-w-sm w-full p-5 rounded-3xl border border-slate-700 text-center relative shadow-2xl animate-fadeIn">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-800">
@@ -579,7 +599,7 @@
             <div class="overflow-y-auto pr-2 space-y-4 text-slate-300 text-xs leading-relaxed">
                 <div>
                     <h4 class="font-bold text-white text-xs mb-1 text-cyan-300">1. Overview & System Mission</h4>
-                    <p class="text-[11px] text-slate-400">Hassan TikTok Downloader Pro is a high-speed web application built to facilitate seamless downloading of TikTok videos without watermark, extracting background audio tracks (MP3), bulk downloading, and profile scraping. Developed by HASSAN FF.</p>
+                    <p class="text-[11px] text-slate-400">Hassan TikTok Downloader Pro is a high-speed web application built to facilitate seamless downloading of TikTok videos without watermark, extracting background audio tracks (MP3), bulk downloading, QR code generation, and profile scraping. Developed by HASSAN FF.</p>
                 </div>
                 <div>
                     <h4 class="font-bold text-white text-xs mb-1 text-cyan-300">2. Core Technical Architecture</h4>
@@ -634,6 +654,9 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // Current Loaded Video Object for Sharing & Favoriting
+        let currentVideoData = null;
+
         // Toggle Slide Drawer Menu
         function toggleMenu() {
             const drawer = document.getElementById('slide-drawer');
@@ -668,7 +691,7 @@
             showToast('Default background restored!');
         }
 
-        // Advanced Tools Modals (Bulk, Slideshow, Profile)
+        // Advanced Tools Modals (Bulk, Slideshow, Profile, QR Code, Favorites)
         function openToolModal(type) {
             const modal = document.getElementById('tool-modal');
             const title = document.getElementById('tool-modal-title');
@@ -696,22 +719,76 @@
                     <input type="text" id="profile-username" placeholder="@username" class="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs">
                     <button onclick="processProfile()" class="w-full py-2 dynamic-btn text-white text-xs font-semibold rounded-lg">Fetch Account Videos</button>
                 `;
+            } else if (type === 'qrcode') {
+                title.innerText = 'QR Code Generator for TikTok';
+                body.innerHTML = `
+                    <p class="text-[11px] text-slate-400">Enter any TikTok link to generate QR code:</p>
+                    <input type="text" id="qr-input-link" placeholder="https://tiktok.com/..." class="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs mb-2">
+                    <div id="qr-display-box" class="text-center bg-white p-3 rounded-lg"><img id="qr-img" src="" alt="QR Code" class="mx-auto w-32 h-32 hidden"> <span id="qr-placeholder" class="text-xs text-slate-500">Enter link above</span></div>
+                    <button onclick="generateQRCode()" class="w-full py-2 dynamic-btn text-white text-xs font-semibold rounded-lg mt-2">Generate QR Code</button>
+                `;
+            } else if (type === 'favorites') {
+                title.innerText = 'Favorites & Bookmarked Videos';
+                const favs = JSON.parse(localStorage.getItem('download_favorites') || '[]');
+                if (favs.length === 0) {
+                    body.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">No favorite videos saved yet! Click the heart icon on any result.</p>`;
+                } else {
+                    body.innerHTML = `<div class="space-y-2 max-h-60 overflow-y-auto pr-1">` + favs.map(item => `
+                        <div class="p-2 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-between">
+                            <span class="text-xs text-white truncate max-w-[180px]">${item.title}</span>
+                            <a href="${item.play}" target="_blank" class="text-[10px] text-cyan-400 underline">Download</a>
+                        </div>
+                    `).join('') + `</div>`;
+                }
             }
         }
         function closeToolModal() {
             document.getElementById('tool-modal').classList.add('hidden');
         }
-        function processBulk() {
-            showToast('Processing bulk links...');
-            closeToolModal();
+        function processBulk() { showToast('Processing bulk links...'); closeToolModal(); }
+        function processSlideshow() { showToast('Fetching slideshow images...'); closeToolModal(); }
+        function processProfile() { showToast('Fetching account profile...'); closeToolModal(); }
+        
+        function generateQRCode() {
+            const link = document.getElementById('qr-input-link').value.trim();
+            if (!link) { showToast('Please enter a link!'); return; }
+            const qrImg = document.getElementById('qr-img');
+            const placeholder = document.getElementById('qr-placeholder');
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(link)}`;
+            qrImg.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+            showToast('QR Code generated!');
         }
-        function processSlideshow() {
-            showToast('Fetching slideshow images...');
-            closeToolModal();
+
+        // Favorites System
+        function toggleCurrentFavorite() {
+            if (!currentVideoData) return;
+            let favs = JSON.parse(localStorage.getItem('download_favorites') || '[]');
+            const exists = favs.some(f => f.id === currentVideoData.id);
+            const favBtn = document.getElementById('fav-btn');
+
+            if (exists) {
+                favs = favs.filter(f => f.id !== currentVideoData.id);
+                favBtn.className = 'w-8 h-8 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-500 flex items-center justify-center transition';
+                showToast('Removed from Favorites');
+            } else {
+                favs.unshift(currentVideoData);
+                favBtn.className = 'w-8 h-8 rounded-full bg-rose-600 border border-rose-500 text-white flex items-center justify-center transition shadow';
+                showToast('Saved to Favorites!');
+            }
+            localStorage.setItem('download_favorites', JSON.stringify(favs));
         }
-        function processProfile() {
-            showToast('Fetching account profile...');
-            closeToolModal();
+
+        // Direct Share to WhatsApp & Telegram
+        function shareToWhatsApp() {
+            if (!currentVideoData) return;
+            const text = encodeURIComponent(`Check out this TikTok video: ${currentVideoData.play}`);
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        }
+        function shareToTelegram() {
+            if (!currentVideoData) return;
+            const text = encodeURIComponent(`Check out this TikTok video: ${currentVideoData.play}`);
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(currentVideoData.play)}&text=${text}`, '_blank');
         }
 
         // Multi-Language Support Dictionary
@@ -773,7 +850,7 @@
             showToast('Thank you for joining!');
         }
 
-        // Dynamic Theme Switcher (Preserving current theme bug fix)
+        // Dynamic Theme Switcher
         function setThemeColor(colorName) {
             document.body.className = `theme-${colorName} bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between relative overflow-x-hidden bg-cover bg-center bg-no-repeat transition-all duration-500`;
             localStorage.setItem('site_theme', colorName);
@@ -885,7 +962,7 @@
             `).join('');
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             const savedTheme = localStorage.getItem('site_theme');
             if (savedTheme) {
                 setThemeColor(savedTheme);
@@ -899,6 +976,18 @@
             }
 
             renderHistory();
+
+            // SMART AUTO-CLIPBOARD DETECTION ON STARTUP
+            try {
+                const clipText = await navigator.clipboard.readText();
+                if (clipText && (clipText.includes('tiktok.com') || clipText.includes('vt.tiktok.com'))) {
+                    document.getElementById('tiktok-url').value = clipText;
+                    toggleClearBtn();
+                    showToast('TikTok link auto-detected from clipboard!');
+                }
+            } catch (err) {
+                // Clipboard read permission ignored or not granted
+            }
 
             const tgJoined = localStorage.getItem('tg_joined');
             if (!tgJoined) {
@@ -933,8 +1022,17 @@
 
                 if (data.code === 0 && data.data) {
                     const videoData = data.data;
+                    currentVideoData = {
+                        id: videoData.id || Date.now(),
+                        title: videoData.title || 'TikTok Video',
+                        author: `@${videoData.author.unique_id}`,
+                        cover: videoData.cover || videoData.origin_cover,
+                        play: videoData.play,
+                        music: videoData.music
+                    };
 
-                    document.getElementById('vid-cover').src = videoData.cover || videoData.origin_cover;
+                    document.getElementById('preview-video-player').src = videoData.play;
+                    document.getElementById('preview-video-player').poster = videoData.cover || videoData.origin_cover;
                     document.getElementById('vid-title').innerText = videoData.title || 'TikTok Video';
                     document.getElementById('author-avatar').src = videoData.author.avatar;
                     document.getElementById('author-name').innerText = videoData.author.nickname;
@@ -949,20 +1047,22 @@
                     document.getElementById('download-hd').href = videoData.play;
                     document.getElementById('download-audio').href = videoData.music;
                     document.getElementById('download-wm').href = videoData.wmplay || videoData.play;
-                    document.getElementById('preview-play-btn').href = videoData.play;
 
-                    saveToHistory({
-                        id: videoData.id || Date.now(),
-                        title: videoData.title || 'TikTok Video',
-                        author: `@${videoData.author.unique_id}`,
-                        cover: videoData.cover || videoData.origin_cover,
-                        play: videoData.play,
-                        music: videoData.music
-                    });
+                    // Check if already in favorites to set correct heart icon state
+                    const favs = JSON.parse(localStorage.getItem('download_favorites') || '[]');
+                    const isFav = favs.some(f => f.id === currentVideoData.id);
+                    const favBtn = document.getElementById('fav-btn');
+                    if (isFav) {
+                        favBtn.className = 'w-8 h-8 rounded-full bg-rose-600 border border-rose-500 text-white flex items-center justify-center transition shadow';
+                    } else {
+                        favBtn.className = 'w-8 h-8 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-500 flex items-center justify-center transition';
+                    }
+
+                    saveToHistory(currentVideoData);
 
                     resultContainer.classList.remove('hidden');
                     resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    showToast('Video fetched successfully!');
+                    showToast('Video fetched & player ready!');
                 } else {
                     showToast('Failed to fetch video.');
                 }
