@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Hassan TikTok Downloader Pro</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { DEFAULT: '#6366f1', dark: '#4f46e5' },
+                        accent: '#ec4899'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body id="body-bg" class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between relative overflow-x-hidden bg-cover bg-center bg-no-repeat transition-all duration-500" style="background-image: linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.9)), url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920&auto=format&fit=crop');">
+
+    <!-- TOP HEADER WITH 3-DOTS MENU -->
+    <header class="w-full px-6 py-4 flex justify-between items-center glass-card border-b border-slate-800 z-30 sticky top-0">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <i class="fa-solid fa-video text-white text-lg"></i>
+            </div>
+            <span id="brand-title" class="text-xl font-bold tracking-wide bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">Hassan Downloader</span>
+        </div>
+
+        <!-- 3-Dots Menu Button -->
+        <div class="relative">
+            <button id="menu-btn" onclick="toggleMenu()" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-slate-800 transition text-slate-300 hover:text-white focus:outline-none">
+                <i class="fa-solid fa-ellipsis-vertical text-xl"></i>
+            </button>
+
+            <!-- 3-Dots Dropdown Menu -->
+            <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-72 glass-card rounded-2xl shadow-2xl p-4 z-50 border border-slate-700 backdrop-blur-xl">
+                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3 px-2">Settings & Customization</h3>
+                
+                <!-- Website Title Change -->
+                <div class="mb-3 px-2">
+                    <label class="text-xs text-slate-300 block mb-1">Custom Website Name</label>
+                    <input type="text" id="custom-title-input" placeholder="Enter Site Name" class="w-full px-3 py-1.5 text-sm rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500">
+                    <button onclick="updateSiteTitle()" class="mt-1 w-full py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs rounded-md transition font-medium">Apply Name</button>
+                </div>
+
+                <!-- Background Image Customizer -->
+                <div class="mb-3 px-2">
+                    <label class="text-xs text-slate-300 block mb-1">Background Image URL</label>
+                    <input type="text" id="custom-bg-input" placeholder="Paste Image URL" class="w-full px-3 py-1.5 text-sm rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500">
+                    <button onclick="updateBackground()" class="mt-1 w-full py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs rounded-md transition font-medium">Apply Background</button>
+                </div>
+
+                <!-- Color Palette Options -->
+                <div class="px-2 pt-2 border-t border-slate-800">
+                    <label class="text-xs text-slate-300 block mb-2">Color Accent Theme</label>
+                    <div class="flex space-x-2">
+                        <button onclick="setThemeColor('indigo')" class="w-7 h-7 rounded-full bg-indigo-600 hover:scale-110 transition shadow"></button>
+                        <button onclick="setThemeColor('pink')" class="w-7 h-7 rounded-full bg-pink-600 hover:scale-110 transition shadow"></button>
+                        <button onclick="setThemeColor('emerald')" class="w-7 h-7 rounded-full bg-emerald-600 hover:scale-110 transition shadow"></button>
+                        <button onclick="setThemeColor('amber')" class="w-7 h-7 rounded-full bg-amber-600 hover:scale-110 transition shadow"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN HERO & DOWNLOAD CONTAINER -->
+    <main class="flex-grow flex flex-col items-center justify-center px-4 py-12 z-10 max-w-4xl mx-auto w-full">
+        <div class="text-center mb-8">
+            <span class="px-4 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 mb-4 inline-block">
+                <i class="fa-solid fa-bolt mr-1"></i> Powered by HASSAN FF
+            </span>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-white">
+                Download TikTok Videos <span class="bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">Without Watermark</span>
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+                Paste your TikTok video link below to instantly download HD videos, music/audio, and thumbnails with zero friction.
+            </p>
+        </div>
+
+        <!-- Input Box Card -->
+        <div class="w-full glass-card p-4 md:p-6 rounded-3xl shadow-2xl border border-slate-700/60 mb-8">
+            <div class="flex flex-col md:flex-row gap-3">
+                <div class="relative flex-grow">
+                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-link"></i>
+                    </span>
+                    <input type="text" id="tiktok-url" placeholder="https://www.tiktok.com/@username/video/..." class="w-full pl-11 pr-4 py-4 rounded-2xl bg-slate-900/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm md:text-base transition">
+                </div>
+                <button onclick="downloadVideo()" id="download-btn" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-semibold rounded-2xl shadow-lg shadow-indigo-600/30 transition transform active:scale-95 flex items-center justify-center space-x-2">
+                    <span id="btn-text">Download Now</span>
+                    <i id="btn-icon" class="fa-solid fa-download"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="hidden flex-col items-center justify-center my-8">
+            <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+            <p class="text-slate-400 text-sm animate-pulse">Fetching video data from server...</p>
+        </div>
+
+        <!-- Result Section -->
+        <div id="result-container" class="hidden w-full glass-card p-6 rounded-3xl shadow-2xl border border-slate-700/60 animate-fadeIn">
+            <div class="flex flex-col md:flex-row gap-6 items-center">
+                <!-- Video Thumbnail / Player -->
+                <div class="w-full md:w-1/3 relative rounded-2xl overflow-hidden shadow-md group">
+                    <img id="vid-cover" src="" alt="Thumbnail" class="w-full h-64 object-cover">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
+                    </div>
+                </div>
+                <!-- Video Details & Download Buttons -->
+                <div class="w-full md:w-2/3 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-3">
+                            <img id="author-avatar" src="" alt="Author" class="w-10 h-10 rounded-full border border-indigo-500 object-cover">
+                            <div>
+                                <h4 id="author-name" class="font-bold text-white text-sm"></h4>
+                                <span id="author-id" class="text-xs text-slate-400"></span>
+                            </div>
+                        </div>
+                        <p id="vid-title" class="text-slate-300 text-sm mb-6 line-clamp-3"></p>
+                    </div>
+
+                    <!-- Action Links -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <a id="download-nwm" href="#" target="_blank" class="px-4 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-center font-medium rounded-xl text-sm transition flex items-center justify-center space-x-2 shadow-lg shadow-emerald-600/20">
+                            <i class="fa-solid fa-video"></i>
+                            <span>Download HD (No Watermark)</span>
+                        </a>
+                        <a id="download-audio" href="#" target="_blank" class="px-4 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-center font-medium rounded-xl text-sm transition flex items-center justify-center space-x-2 shadow-lg shadow-indigo-600/20">
+                            <i class="fa-solid fa-music"></i>
+                            <span>Download MP3 Audio</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full py-6 text-center text-xs text-slate-500 glass-card border-t border-slate-800 z-10">
+        <p>© 2026 Hassan Toolkit. All rights reserved. Built with HASSAN FF.</p>
+    </footer>
+
+    <!-- TELEGRAM POPUP MODAL (2 STEPS / DUAL BUTTONS) -->
+    <div id="telegram-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-6 md:p-8 rounded-3xl border border-slate-700 shadow-2xl text-center relative animate-scaleUp">
+            <div class="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-400 text-2xl shadow-inner">
+                <i class="fa-brands fa-telegram"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2">Join Our Telegram Channels</h2>
+            <p class="text-slate-300 text-sm mb-6">To access the TikTok Downloader tools and get latest updates, please join both official channels below:</p>
+
+            <div class="space-y-3 mb-6">
+                <!-- 1st Channel -->
+                <a href="https://t.me/hassan1updates" target="_blank" class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900/80 border border-slate-700 hover:border-indigo-500 transition group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold">1</div>
+                        <div class="text-left">
+                            <p class="text-white text-sm font-semibold group-hover:text-indigo-400 transition">HASSAN TOOLKIT UPDATES</p>
+                            <span class="text-xs text-slate-400">t.me/hassan1updates</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-white transition"></i>
+                </a>
+
+                <!-- 2nd Channel -->
+                <a href="https://t.me/+NmimAJ2jgoFhYjQ8" target="_blank" class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900/80 border border-slate-700 hover:border-pink-500 transition group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl bg-pink-600/20 text-pink-400 flex items-center justify-center font-bold">2</div>
+                        <div class="text-left">
+                            <p class="text-white text-sm font-semibold group-hover:text-pink-400 transition">HASSAN OFC CHANNEL</p>
+                            <span class="text-xs text-slate-400">t.me/+NmimAJ2jgoFhYjQ8</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-white transition"></i>
+                </a>
+            </div>
+
+            <button onclick="closeTelegramModal()" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-semibold rounded-2xl shadow-lg transition">
+                I Have Joined - Continue
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Toggle 3-Dots Menu
+        function toggleMenu() {
+            const menu = document.getElementById('dropdown-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Close menu when clicking outside
+        window.addEventListener('click', function(e) {
+            const menu = document.getElementById('dropdown-menu');
+            const btn = document.getElementById('menu-btn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Close Telegram Modal
+        function closeTelegramModal() {
+            document.getElementById('telegram-modal').classList.add('hidden');
+        }
+
+        // Custom Title Update
+        function updateSiteTitle() {
+            const val = document.getElementById('custom-title-input').value.trim();
+            if (val) {
+                document.getElementById('page-title').innerText = val;
+                document.getElementById('brand-title').innerText = val;
+                localStorage.setItem('site_title', val);
+            }
+        }
+
+        // Custom Background Update
+        function updateBackground() {
+            const url = document.getElementById('custom-bg-input').value.trim();
+            if (url) {
+                document.getElementById('body-bg').style.backgroundImage = `linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.9)), url('${url}')`;
+                localStorage.setItem('site_bg', url);
+            }
+        }
+
+        // Theme Colors
+        function setThemeColor(color) {
+            // Can be extended or customized as needed
+            localStorage.setItem('site_theme', color);
+            alert('Theme accent updated successfully!');
+        }
+
+        // Load saved preferences on start
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTitle = localStorage.getItem('site_title');
+            if (savedTitle) {
+                document.getElementById('page-title').innerText = savedTitle;
+                document.getElementById('brand-title').innerText = savedTitle;
+                document.getElementById('custom-title-input').value = savedTitle;
+            }
+            const savedBg = localStorage.getItem('site_bg');
+            if (savedBg) {
+                document.getElementById('body-bg').style.backgroundImage = `linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.9)), url('${savedBg}')`;
+                document.getElementById('custom-bg-input').value = savedBg;
+            }
+        });
+
+        // TikTok Video Downloader using TikWM API
+        async function downloadVideo() {
+            const urlInput = document.getElementById('tiktok-url').value.trim();
+            if (!urlInput) {
+                alert('Please paste a valid TikTok video URL first!');
+                return;
+            }
+
+            const loading = document.getElementById('loading');
+            const resultContainer = document.getElementById('result-container');
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+
+            // Show Loading
+            loading.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
+            btnText.innerText = 'Processing...';
+            btnIcon.className = 'fa-solid fa-spinner fa-spin';
+
+            try {
+                // Fetching from TikWM API
+                const apiURL = `https://tikwm.com/api/?url=${encodeURIComponent(urlInput)}`;
+                const response = await fetch(apiURL);
+                const data = await response.json();
+
+                if (data.code === 0 && data.data) {
+                    const videoData = data.data;
+
+                    // Populate Data
+                    document.getElementById('vid-cover').src = videoData.cover || videoData.origin_cover;
+                    document.getElementById('vid-title').innerText = videoData.title || 'TikTok Video';
+                    document.getElementById('author-avatar').src = videoData.author.avatar;
+                    document.getElementById('author-name').innerText = videoData.author.nickname;
+                    document.getElementById('author-id').innerText = `@${videoData.author.unique_id}`;
+
+                    // Set Download Links
+                    document.getElementById('download-nwm').href = videoData.play;
+                    document.getElementById('download-audio').href = videoData.music;
+
+                    // Show Results
+                    resultContainer.classList.remove('hidden');
+                } else {
+                    alert('Failed to fetch video. Please check the URL and try again.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred while connecting to the API. Please try again later.');
+            } finally {
+                loading.classList.add('hidden');
+                btnText.innerText = 'Download Now';
+                btnIcon.className = 'fa-solid fa-download';
+            }
+        }
+    </script>
+</body>
+</html>
