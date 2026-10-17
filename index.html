@@ -1,332 +1,781 @@
+
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Hassan TikTok VIDEO Downloader Pro</title>
-    <!-- Tailwind CSS CDN -->
+    <title>TikTok Video Downloader - DEVELOP BY HASSAN FF</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: { DEFAULT: '#6366f1', dark: '#4f46e5' },
-                        accent: '#ec4899'
+                        brand: {
+                            cyan: { 500: '#06b6d4', 600: '#0891b2', glow: 'rgba(6, 182, 212, 0.4)' },
+                            golden: { 500: '#eab308', 600: '#ca8a04', glow: 'rgba(234, 179, 8, 0.4)' },
+                            indigo: { 500: '#6366f1', 600: '#4f46e5', glow: 'rgba(99, 102, 241, 0.4)' },
+                            pink: { 500: '#ec4899', 600: '#db2777', glow: 'rgba(236, 72, 153, 0.4)' }
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: 'Poppins', sans-serif; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f17;
+            color: #f3f4f6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .dark .glass-card {
-            background: rgba(15, 23, 42, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .glass-modal {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* Dynamic Theme Custom Variables */
+        :root {
+            --theme-color: #06b6d4;
+            --theme-color-dark: #0891b2;
+            --theme-glow: rgba(6, 182, 212, 0.35);
+        }
+
+        .theme-cyan { --theme-color: #06b6d4; --theme-color-dark: #0891b2; --theme-glow: rgba(6, 182, 212, 0.35); }
+        .theme-golden { --theme-color: #eab308; --theme-color-dark: #ca8a04; --theme-glow: rgba(234, 179, 8, 0.35); }
+        .theme-indigo { --theme-color: #6366f1; --theme-color-dark: #4f46e5; --theme-glow: rgba(99, 102, 241, 0.35); }
+        .theme-pink { --theme-color: #ec4899; --theme-color-dark: #db2777; --theme-glow: rgba(236, 72, 153, 0.35); }
+
+        .theme-bg { background-color: var(--theme-color); }
+        .theme-text { color: var(--theme-color); }
+        .theme-border { border-color: var(--theme-color); }
+        .theme-shadow { box-shadow: 0 0 20px var(--theme-glow); }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--theme-color), var(--theme-color-dark));
+            box-shadow: 0 4px 15px var(--theme-glow);
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--theme-glow);
+        }
+
+        /* Drawer Transition */
+        .drawer-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .drawer-content {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Loading Spinner Animation */
+        @keyframes spinFast {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinner {
+            animation: spinFast 0.8s linear infinite;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
-<body id="body-bg" class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between relative overflow-x-hidden bg-cover bg-center bg-no-repeat transition-all duration-500" style="background-image: linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.9)), url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920&auto=format&fit=crop');">
+<body class="theme-cyan flex flex-col justify-between min-h-screen">
 
-    <!-- TOP HEADER WITH 3-DOTS MENU -->
-    <header class="w-full px-6 py-4 flex justify-between items-center glass-card border-b border-slate-800 z-30 sticky top-0">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <i class="fa-solid fa-video text-white text-lg"></i>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- HEADER / NAVBAR -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-800 px-4 py-3">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo & Title -->
+            <div class="flex items-center space-x-3">
+                <img src="https://i.ibb.co/Ng9PdyMK/jawadmd.jpg" alt="Logo" class="w-10 h-10 rounded-full border-2 theme-border object-cover shadow-md" onerror="this.src='https://placehold.co/100x100/1e293b/06b6d4?text=HASSAN'">
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold tracking-wide theme-text">HASSAN TIKTOK VIDEOS DOWNLOADER</h1>
+                    <p class="text-xs text-gray-400">TikTok Video Downloader Tool</p>
+                </div>
             </div>
-            <span id="brand-title" class="text-xl font-bold tracking-wide bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">Hassan Downloader</span>
-        </div>
 
-        <!-- 3-Dots Menu Button -->
-        <div class="relative">
-            <button id="menu-btn" onclick="toggleMenu()" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-slate-800 transition text-slate-300 hover:text-white focus:outline-none">
-                <i class="fa-solid fa-ellipsis-vertical text-xl"></i>
+            <!-- Drawer Open Button (3 Dots Menu) -->
+            <button id="open-drawer-btn" class="p-2.5 rounded-xl bg-gray-800/80 hover:bg-gray-700/80 text-white transition-all duration-200 border border-gray-700/50 flex items-center justify-center">
+                <i class="fa-solid fa-ellipsis-vertical text-lg w-5 text-center"></i>
             </button>
-
-            <!-- 3-Dots Dropdown Menu -->
-            <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-72 glass-card rounded-2xl shadow-2xl p-4 z-50 border border-slate-700 backdrop-blur-xl">
-                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3 px-2">Settings & Customization</h3>
-                
-                <!-- Website Title Change -->
-                <div class="mb-3 px-2">
-                    <label class="text-xs text-slate-300 block mb-1">Custom Website Name</label>
-                    <input type="text" id="custom-title-input" placeholder="Enter Site Name" class="w-full px-3 py-1.5 text-sm rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500">
-                    <button onclick="updateSiteTitle()" class="mt-1 w-full py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs rounded-md transition font-medium">Apply Name</button>
-                </div>
-
-                <!-- Background Image Customizer -->
-                <div class="mb-3 px-2">
-                    <label class="text-xs text-slate-300 block mb-1">Background Image URL</label>
-                    <input type="text" id="custom-bg-input" placeholder="Paste Image URL" class="w-full px-3 py-1.5 text-sm rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500">
-                    <button onclick="updateBackground()" class="mt-1 w-full py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs rounded-md transition font-medium">Apply Background</button>
-                </div>
-
-                <!-- Color Palette Options -->
-                <div class="px-2 pt-2 border-t border-slate-800">
-                    <label class="text-xs text-slate-300 block mb-2">Color Accent Theme</label>
-                    <div class="flex space-x-2">
-                        <button onclick="setThemeColor('indigo')" class="w-7 h-7 rounded-full bg-indigo-600 hover:scale-110 transition shadow"></button>
-                        <button onclick="setThemeColor('pink')" class="w-7 h-7 rounded-full bg-pink-600 hover:scale-110 transition shadow"></button>
-                        <button onclick="setThemeColor('emerald')" class="w-7 h-7 rounded-full bg-emerald-600 hover:scale-110 transition shadow"></button>
-                        <button onclick="setThemeColor('amber')" class="w-7 h-7 rounded-full bg-amber-600 hover:scale-110 transition shadow"></button>
-                    </div>
-                </div>
-            </div>
         </div>
     </header>
 
-    <!-- MAIN HERO & DOWNLOAD CONTAINER -->
-    <main class="flex-grow flex flex-col items-center justify-center px-4 py-12 z-10 max-w-4xl mx-auto w-full">
-        <div class="text-center mb-8">
-            <span class="px-4 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 mb-4 inline-block">
-                <i class="fa-solid fa-bolt mr-1"></i> Powered by TikWM API
-            </span>
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-white">
-                Download TikTok Videos <span class="bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">Without Watermark</span>
-            </h1>
-            <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
-                Paste your TikTok video link below to instantly download HD videos, music/audio, and thumbnails with zero friction.
-            </p>
-        </div>
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow space-y-6">
 
-        <!-- Input Box Card -->
-        <div class="w-full glass-card p-4 md:p-6 rounded-3xl shadow-2xl border border-slate-700/60 mb-8">
-            <div class="flex flex-col md:flex-row gap-3">
-                <div class="relative flex-grow">
-                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                        <i class="fa-solid fa-link"></i>
-                    </span>
-                    <input type="text" id="tiktok-url" placeholder="https://www.tiktok.com/@username/video/..." class="w-full pl-11 pr-4 py-4 rounded-2xl bg-slate-900/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm md:text-base transition">
+        <!-- TELEGRAM INTRO / FOLLOW MODAL (Fixed theme issue) -->
+        <div id="intro-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <div class="glass-modal w-full max-w-md rounded-2xl p-6 shadow-2xl relative border border-gray-700 text-center space-y-5 transform transition-all scale-100">
+                <div class="w-16 h-16 rounded-full theme-bg text-white flex items-center justify-center mx-auto text-2xl shadow-lg theme-shadow">
+                    <i class="fa-brands fa-telegram"></i>
                 </div>
-                <button onclick="downloadVideo()" id="download-btn" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-semibold rounded-2xl shadow-lg shadow-indigo-600/30 transition transform active:scale-95 flex items-center justify-center space-x-2">
-                    <span id="btn-text">Download Now</span>
-                    <i id="btn-icon" class="fa-solid fa-download"></i>
+                <div>
+                    <h3 class="text-xl font-extrabold text-white">Join Telegram Channels</h3>
+                    <p class="text-xs text-gray-400 mt-1">Please follow our official channels to unlock complete downloading features and update notifications.</p>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <!-- Step 1 Link -->
+                    <a href="https://t.me/hassan1updates" target="_blank" onclick="markStepCompleted(1)" id="step1-btn" class="flex items-center justify-between p-3.5 rounded-xl bg-gray-800/90 border border-gray-700 hover:border-cyan-500 text-white font-medium text-sm transition-all group">
+                        <span class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 text-xs flex items-center justify-center font-bold">1</span>
+                            HASSAN TOOLKIT UPDATES
+                        </span>
+                        <i class="fa-solid fa-external-link text-xs text-gray-400 group-hover:text-cyan-400"></i>
+                    </a>
+
+                    <!-- Step 2 Link -->
+                    <a href="https://t.me/+NmimAJ2jgoFhYjQ8" target="_blank" onclick="markStepCompleted(2)" id="step2-btn" class="flex items-center justify-between p-3.5 rounded-xl bg-gray-800/90 border border-gray-700 hover:border-cyan-500 text-white font-medium text-sm transition-all group">
+                        <span class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 text-xs flex items-center justify-center font-bold">2</span>
+                            HASSAN OFC CHANNEL
+                        </span>
+                        <i class="fa-solid fa-external-link text-xs text-gray-400 group-hover:text-cyan-400"></i>
+                    </a>
+                </div>
+
+                <!-- Continue Button -->
+                <button id="close-intro-btn" onclick="closeIntroModal()" class="w-full py-3 rounded-xl btn-gradient text-white font-bold text-sm tracking-wide shadow-md">
+                    CONTINUE TO APP <i class="fa-solid fa-arrow-right ml-2"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Loading Spinner -->
-        <div id="loading" class="hidden flex-col items-center justify-center my-8">
-            <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-            <p class="text-slate-400 text-sm animate-pulse">Fetching video data from server...</p>
+        <!-- WHATSAPP BANNER -->
+        <a href="https://whatsapp.com/channel/0029VbDRJh789ine9bjCVF3m" target="_blank" class="glass-panel p-4 rounded-2xl flex items-center justify-between border border-emerald-500/30 hover:border-emerald-500/60 transition-all duration-300 group shadow-lg">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-sm sm:text-base group-hover:text-emerald-400 transition-colors">Join Official WhatsApp Channel</h4>
+                    <p class="text-xs text-gray-400">Get instant updates, scripts & tools info directly</p>
+                </div>
+            </div>
+            <span class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-semibold whitespace-nowrap">JOIN NOW</span>
+        </a>
+
+        <!-- INPUT SECTION -->
+        <div class="glass-panel p-5 sm:p-6 rounded-3xl space-y-4 border border-gray-800 shadow-xl">
+            <div class="text-center space-y-1">
+                <h2 class="text-xl sm:text-2xl font-black text-white">TikTok Downloader</h2>
+                <p class="text-xs sm:text-sm text-gray-400">Download TikTok videos without watermark, HD format, and MP3 audio fast.</p>
+            </div>
+
+            <form id="download-form" onsubmit="handleFormSubmit(event)" class="space-y-3">
+                <div class="relative flex items-center">
+                    <i class="fa-solid fa-link absolute left-4 text-gray-400"></i>
+                    <input type="url" id="tiktok-url" placeholder="Paste TikTok video link here..." required
+                        class="w-full pl-11 pr-24 py-3.5 bg-gray-900/90 border border-gray-700/80 rounded-2xl text-white text-sm focus:outline-none focus:border-cyan-500 transition-all placeholder:text-gray-500">
+                    <button type="button" onclick="pasteFromClipboard()" class="absolute right-2 px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl border border-gray-700 transition-all flex items-center gap-1">
+                        <i class="fa-regular fa-paste"></i> Paste
+                    </button>
+                </div>
+
+                <button type="submit" id="download-btn" class="w-full py-3.5 rounded-2xl btn-gradient text-white font-extrabold text-sm tracking-wider flex items-center justify-center gap-2 shadow-lg">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>DOWNLOAD NOW</span>
+                </button>
+            </form>
         </div>
 
-        <!-- Result Section -->
-        <div id="result-container" class="hidden w-full glass-card p-6 rounded-3xl shadow-2xl border border-slate-700/60 animate-fadeIn">
-            <div class="flex flex-col md:flex-row gap-6 items-center">
-                <!-- Video Thumbnail / Player -->
-                <div class="w-full md:w-1/3 relative rounded-2xl overflow-hidden shadow-md group">
-                    <img id="vid-cover" src="" alt="Thumbnail" class="w-full h-64 object-cover">
-                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
+        <!-- FETCHED RESULT CARD (DISPLAYED DIRECTLY BELOW INPUT FORM) -->
+        <div id="result-card" class="hidden glass-panel rounded-3xl p-5 sm:p-6 space-y-5 border border-gray-700 shadow-2xl transition-all duration-300">
+            <!-- Account Profile Details Section -->
+            <div class="flex items-center space-x-4 pb-4 border-b border-gray-800">
+                <img id="author-avatar" src="" alt="Avatar" class="w-14 h-14 rounded-full border-2 theme-border object-cover shadow-md" onerror="this.src='https://placehold.co/100x100/1e293b/06b6d4?text=User'">
+                <div class="flex-1 overflow-hidden">
+                    <h3 id="author-nickname" class="text-base font-bold text-white truncate">Uploader Name</h3>
+                    <p id="author-username" class="text-xs text-gray-400 truncate">@username</p>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-cyan-500/10 theme-text mt-1">
+                        <i class="fa-solid fa-check-circle mr-1 text-[10px]"></i> Verified TikWM Source
+                    </span>
+                </div>
+            </div>
+
+            <!-- Video / Cover Preview & Description -->
+            <div class="space-y-3">
+                <div class="relative w-full rounded-2xl overflow-hidden bg-black/60 border border-gray-800 aspect-video flex items-center justify-center">
+                    <img id="video-cover" src="" class="w-full h-full object-contain" alt="Cover Preview">
+                    <div class="absolute bottom-2 left-2 px-2.5 py-1 bg-black/70 backdrop-blur-md rounded-lg text-[11px] text-gray-300 flex items-center gap-2">
+                        <span><i class="fa-regular fa-clock"></i> <span id="video-duration">00:00</span></span>
                     </div>
                 </div>
-                <!-- Video Details & Download Buttons -->
-                <div class="w-full md:w-2/3 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center space-x-3 mb-3">
-                            <img id="author-avatar" src="" alt="Author" class="w-10 h-10 rounded-full border border-indigo-500 object-cover">
-                            <div>
-                                <h4 id="author-name" class="font-bold text-white text-sm"></h4>
-                                <span id="author-id" class="text-xs text-slate-400"></span>
-                            </div>
-                        </div>
-                        <p id="vid-title" class="text-slate-300 text-sm mb-6 line-clamp-3"></p>
-                    </div>
 
-                    <!-- Action Links -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <a id="download-nwm" href="#" target="_blank" class="px-4 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-center font-medium rounded-xl text-sm transition flex items-center justify-center space-x-2 shadow-lg shadow-emerald-600/20">
-                            <i class="fa-solid fa-video"></i>
-                            <span>Download HD (No Watermark)</span>
-                        </a>
-                        <a id="download-audio" href="#" target="_blank" class="px-4 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-center font-medium rounded-xl text-sm transition flex items-center justify-center space-x-2 shadow-lg shadow-indigo-600/20">
-                            <i class="fa-solid fa-music"></i>
-                            <span>Download MP3 Audio</span>
-                        </a>
+                <!-- Video Description / Caption Box -->
+                <div class="p-3.5 bg-gray-900/80 rounded-2xl border border-gray-800 text-xs text-gray-300 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-gray-400 uppercase tracking-wider text-[10px] flex items-center gap-1">
+                            <i class="fa-solid fa-align-left theme-text"></i> Caption / Description
+                        </span>
                     </div>
+                    <p id="video-caption-text" class="leading-relaxed line-clamp-3 select-text">No caption available.</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons for Video Download & Caption -->
+            <div class="space-y-2.5 pt-2">
+                <!-- Download Without Watermark -->
+                <a id="btn-no-watermark" href="#" target="_blank" download class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm flex items-center justify-between shadow-md transition-all">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-shield-halved"></i> DOWNLOAD WITHOUT WATERMARK</span>
+                    <i class="fa-solid fa-download"></i>
+                </a>
+
+                <!-- Download With Watermark -->
+                <a id="btn-watermark" href="#" target="_blank" download class="w-full py-3 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold text-xs sm:text-sm flex items-center justify-between border border-gray-700 transition-all">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-water"></i> DOWNLOAD WITH WATERMARK</span>
+                    <i class="fa-solid fa-download"></i>
+                </a>
+
+                <!-- Download MP3 / Audio -->
+                <a id="btn-audio" href="#" target="_blank" download class="w-full py-3 px-4 rounded-xl bg-purple-600/80 hover:bg-purple-600 text-white font-bold text-xs sm:text-sm flex items-center justify-between shadow-md transition-all">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-music"></i> DOWNLOAD MP3 / AUDIO</span>
+                    <i class="fa-solid fa-download"></i>
+                </a>
+
+                <!-- Download IN HD -->
+                <a id="btn-hd" href="#" target="_blank" download class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm flex items-center justify-between shadow-md transition-all">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> DOWNLOAD IN HD</span>
+                    <i class="fa-solid fa-download"></i>
+                </a>
+
+                <!-- Copy Caption Button -->
+                <button id="btn-copy-caption" onclick="copyCaptionText()" class="w-full py-3 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-cyan-400 font-bold text-xs sm:text-sm flex items-center justify-between border border-cyan-500/30 transition-all">
+                    <span class="flex items-center gap-2"><i class="fa-regular fa-copy"></i> COPY CAPTION</span>
+                    <i class="fa-solid fa-check text-xs hidden" id="copy-check-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- DOWNLOAD HISTORY SECTION -->
+        <div class="glass-panel p-5 sm:p-6 rounded-3xl space-y-4 border border-gray-800 shadow-xl">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-800">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-clock-rotate-left theme-text text-lg"></i>
+                    <h3 class="text-base font-bold text-white">Download History</h3>
+                </div>
+                <button onclick="clearHistory()" class="text-xs text-red-400 hover:text-red-300 font-medium transition-colors">
+                    <i class="fa-solid fa-trash-can mr-1"></i> Clear History
+                </button>
+            </div>
+
+            <div id="history-container" class="space-y-3">
+                <div id="empty-history-msg" class="text-center py-8 text-gray-500 text-xs">
+                    No recent downloads found. Links you download will appear here.
                 </div>
             </div>
         </div>
+
+        <!-- APP INFO / FAQ MODALS CARDS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="glass-panel p-4 rounded-2xl space-y-2 border border-gray-800">
+                <h4 class="font-bold text-sm text-white flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check theme-text"></i> Fast & Unlimited
+                </h4>
+                <p class="text-xs text-gray-400">Save as many TikTok videos as you like without any restrictions or hidden costs.</p>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl space-y-2 border border-gray-800">
+                <h4 class="font-bold text-sm text-white flex items-center gap-2">
+                    <i class="fa-solid fa-shield-cat theme-text"></i> Watermark Removal
+                </h4>
+                <p class="text-xs text-gray-400">Extract high quality TikTok videos completely clean without watermarks.</p>
+            </div>
+        </div>
+
     </main>
 
     <!-- FOOTER -->
-    <footer class="w-full py-6 text-center text-xs text-slate-500 glass-card border-t border-slate-800 z-10">
-        <p>© 2026 Hassan Toolkit. All rights reserved. Built with TikWM API.</p>
+    <footer class="glass-panel border-t border-gray-800 py-4 px-4 text-center mt-8">
+        <div class="max-w-4xl mx-auto space-y-1">
+            <p class="text-xs font-semibold theme-text">DEVELOP BY HASSAN FF</p>
+            <p class="text-[11px] text-gray-500">&copy; 2026 All Rights Reserved. Powered by TikWM API Engine.</p>
+        </div>
     </footer>
 
-    <!-- TELEGRAM POPUP MODAL (2 STEPS / DUAL BUTTONS) -->
-    <div id="telegram-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full p-6 md:p-8 rounded-3xl border border-slate-700 shadow-2xl text-center relative animate-scaleUp">
-            <div class="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-400 text-2xl shadow-inner">
-                <i class="fa-brands fa-telegram"></i>
-            </div>
-            <h2 class="text-2xl font-bold text-white mb-2">Join Our Telegram Channels</h2>
-            <p class="text-slate-300 text-sm mb-6">To access the TikTok Downloader tools and get latest updates, please join both official channels below:</p>
-
-            <div class="space-y-3 mb-6">
-                <!-- 1st Channel -->
-                <a href="https://t.me/hassan1updates" target="_blank" class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900/80 border border-slate-700 hover:border-indigo-500 transition group">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold">1</div>
-                        <div class="text-left">
-                            <p class="text-white text-sm font-semibold group-hover:text-indigo-400 transition">HASSAN TOOLKIT UPDATES</p>
-                            <span class="text-xs text-slate-400">t.me/hassan1updates</span>
-                        </div>
+    <!-- SLIDE DRAWER MOBILE MENU -->
+    <div id="drawer-overlay" onclick="closeDrawer()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 opacity-0 pointer-events-none drawer-overlay"></div>
+    
+    <div id="drawer-content" class="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] glass-modal z-50 p-6 flex flex-col justify-between transform translate-x-full drawer-content border-l border-gray-800">
+        <div class="space-y-6">
+            <!-- Drawer Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-gray-800">
+                <div class="flex items-center space-x-3">
+                    <img src="https://i.ibb.co/Ng9PdyMK/jawadmd.jpg" alt="Logo" class="w-9 h-9 rounded-full border theme-border object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/06b6d4?text=H'">
+                    <div>
+                        <h3 class="font-bold text-sm text-white">DEVELOP BY HASSAN FF</h3>
+                        <p class="text-[10px] text-gray-400">Official Mobile Toolkit</p>
                     </div>
-                    <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-white transition"></i>
-                </a>
-
-                <!-- 2nd Channel -->
-                <a href="https://t.me/+NmimAJ2jgoFhYjQ8" target="_blank" class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900/80 border border-slate-700 hover:border-pink-500 transition group">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-pink-600/20 text-pink-400 flex items-center justify-center font-bold">2</div>
-                        <div class="text-left">
-                            <p class="text-white text-sm font-semibold group-hover:text-pink-400 transition">HASSAN OFC CHANNEL</p>
-                            <span class="text-xs text-slate-400">t.me/+NmimAJ2jgoFhYjQ8</span>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-white transition"></i>
-                </a>
+                </div>
+                <button onclick="closeDrawer()" class="text-gray-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
-            <button onclick="closeTelegramModal()" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-semibold rounded-2xl shadow-lg transition">
-                I Have Joined - Continue
-            </button>
+            <!-- Theme Options Switcher -->
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-gray-300 uppercase tracking-wider block">Select Color Theme</label>
+                <div class="grid grid-cols-4 gap-2">
+                    <button onclick="setAppTheme('cyan')" class="py-2 rounded-xl bg-cyan-500/20 border border-cyan-500 text-cyan-400 text-xs font-bold flex flex-col items-center gap-1">
+                        <span class="w-3 h-3 rounded-full bg-cyan-500"></span> Cyan
+                    </button>
+                    <button onclick="setAppTheme('golden')" class="py-2 rounded-xl bg-yellow-500/20 border border-yellow-500 text-yellow-400 text-xs font-bold flex flex-col items-center gap-1">
+                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span> Golden
+                    </button>
+                    <button onclick="setAppTheme('indigo')" class="py-2 rounded-xl bg-indigo-500/20 border border-indigo-500 text-indigo-400 text-xs font-bold flex flex-col items-center gap-1">
+                        <span class="w-3 h-3 rounded-full bg-indigo-500"></span> Indigo
+                    </button>
+                    <button onclick="setAppTheme('pink')" class="py-2 rounded-xl bg-pink-500/20 border border-pink-500 text-pink-400 text-xs font-bold flex flex-col items-center gap-1">
+                        <span class="w-3 h-3 rounded-full bg-pink-500"></span> Pink
+                    </button>
+                </div>
+            </div>
+
+            <!-- Drawer Navigation Links -->
+            <div class="space-y-2 pt-2">
+                <a href="https://wa.me/+923372938160" target="_blank" class="flex items-center space-x-3 p-3 rounded-xl bg-gray-800/60 hover:bg-gray-800 text-gray-200 text-xs font-medium border border-gray-700/50 transition-all">
+                    <i class="fa-brands fa-whatsapp text-emerald-400 text-base"></i>
+                    <span>WhatsApp (+92 337 2938160)</span>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029VbDRJh789ine9bjCVF3m" target="_blank" class="flex items-center space-x-3 p-3 rounded-xl bg-gray-800/60 hover:bg-gray-800 text-gray-200 text-xs font-medium border border-gray-700/50 transition-all">
+                    <i class="fa-solid fa-bullhorn text-emerald-400 text-base"></i>
+                    <span>WhatsApp Channel</span>
+                </a>
+
+                <a href="https://t.me/hassan1updates" target="_blank" class="flex items-center space-x-3 p-3 rounded-xl bg-gray-800/60 hover:bg-gray-800 text-gray-200 text-xs font-medium border border-gray-700/50 transition-all">
+                    <i class="fa-brands fa-telegram text-cyan-400 text-base"></i>
+                    <span>HASSAN TOOLKIT UPDATES</span>
+                </a>
+
+                <button onclick="openModal('about-modal')" class="w-full flex items-center space-x-3 p-3 rounded-xl bg-gray-800/60 hover:bg-gray-800 text-gray-200 text-xs font-medium border border-gray-700/50 transition-all text-left">
+                    <i class="fa-solid fa-circle-info theme-text text-base"></i>
+                    <span>About & Documentation</span>
+                </button>
+
+                <button onclick="openModal('faq-modal')" class="w-full flex items-center space-x-3 p-3 rounded-xl bg-gray-800/60 hover:bg-gray-800 text-gray-200 text-xs font-medium border border-gray-700/50 transition-all text-left">
+                    <i class="fa-solid fa-circle-question theme-text text-base"></i>
+                    <span>Frequently Asked Questions</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-gray-800 text-center">
+            <p class="text-[10px] text-gray-500">TikTok Downloader v2.5 • Hassan Toolkit</p>
+        </div>
+    </div>
+
+    <!-- ABOUT MODAL -->
+    <div id="about-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="glass-modal w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4 border border-gray-700">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-800">
+                <h3 class="font-bold text-white text-base">About & Docs</h3>
+                <button onclick="closeModal('about-modal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-3 text-xs text-gray-300 leading-relaxed max-h-80 overflow-y-auto pr-1">
+                <p>This web application allows you to download TikTok videos instantly without watermarks, directly in full HD or MP3 formats using fast API servers.</p>
+                <p><strong>Features:</strong></p>
+                <ul class="list-disc list-inside space-y-1 text-gray-400">
+                    <li>No watermark extraction</li>
+                    <li>Audio/MP3 conversion</li>
+                    <li>Uploader account profile details detection</li>
+                    <li>Caption copy support</li>
+                    <li>Download history preservation</li>
+                </ul>
+                <p class="pt-2 text-[11px] text-gray-500">Created and maintained by <strong>HASSAN FF</strong>.</p>
+            </div>
+            <button onclick="closeModal('about-modal')" class="w-full py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-bold text-xs">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- FAQ MODAL -->
+    <div id="faq-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="glass-modal w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4 border border-gray-700">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-800">
+                <h3 class="font-bold text-white text-base">Frequently Asked Questions</h3>
+                <button onclick="closeModal('faq-modal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-3 text-xs text-gray-300 max-h-80 overflow-y-auto pr-1">
+                <div class="p-3 rounded-xl bg-gray-900/60 border border-gray-800">
+                    <p class="font-bold text-white mb-1">Is this tool free?</p>
+                    <p class="text-gray-400">Yes, this TikTok downloader is 100% free with unlimited usage.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-gray-900/60 border border-gray-800">
+                    <p class="font-bold text-white mb-1">Where are downloaded videos saved?</p>
+                    <p class="text-gray-400">Downloaded files are stored in your device default Downloads folder.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-gray-900/60 border border-gray-800">
+                    <p class="font-bold text-white mb-1">Does it support private accounts?</p>
+                    <p class="text-gray-400">No, TikTok API requires videos to be publicly available to download.</p>
+                </div>
+            </div>
+            <button onclick="closeModal('faq-modal')" class="w-full py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-bold text-xs">CLOSE</button>
         </div>
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Toggle 3-Dots Menu
-        function toggleMenu() {
-            const menu = document.getElementById('dropdown-menu');
-            menu.classList.toggle('hidden');
-        }
+        // Global variables and state management
+        let currentFetchedData = null;
+        let step1Done = false;
+        let step2Done = false;
 
-        // Close menu when clicking outside
-        window.addEventListener('click', function(e) {
-            const menu = document.getElementById('dropdown-menu');
-            const btn = document.getElementById('menu-btn');
-            if (!menu.contains(e.target) && !btn.contains(e.target)) {
-                menu.classList.add('hidden');
-            }
+        // Initialize Theme without breaking on Modal Intro
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('hassan_app_theme') || 'cyan';
+            setAppTheme(savedTheme, false); // Do not force golden theme on startup
+            loadHistory();
+
+            // Setup Drawer Toggle Events
+            document.getElementById('open-drawer-btn').addEventListener('click', openDrawer);
         });
 
-        // Close Telegram Modal
-        function closeTelegramModal() {
-            document.getElementById('telegram-modal').classList.add('hidden');
-        }
+        // Theme Switcher Function
+        function setAppTheme(themeName, showToastMsg = true) {
+            const body = document.body;
+            body.classList.remove('theme-cyan', 'theme-golden', 'theme-indigo', 'theme-pink');
+            body.classList.add(`theme-${themeName}`);
+            localStorage.setItem('hassan_app_theme', themeName);
 
-        // Custom Title Update
-        function updateSiteTitle() {
-            const val = document.getElementById('custom-title-input').value.trim();
-            if (val) {
-                document.getElementById('page-title').innerText = val;
-                document.getElementById('brand-title').innerText = val;
-                localStorage.setItem('site_title', val);
+            if (showToastMsg) {
+                showToast(`Theme changed to ${themeName.toUpperCase()}`, 'info');
             }
         }
 
-        // Custom Background Update
-        function updateBackground() {
-            const url = document.getElementById('custom-bg-input').value.trim();
-            if (url) {
-                document.getElementById('body-bg').style.backgroundImage = `linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.9)), url('${url}')`;
-                localStorage.setItem('site_bg', url);
+        // Telegram Steps Modal Functions
+        function markStepCompleted(step) {
+            if (step === 1) step1Done = true;
+            if (step === 2) step2Done = true;
+        }
+
+        function closeIntroModal() {
+            const modal = document.getElementById('intro-modal');
+            modal.classList.add('hidden');
+            showToast('Welcome to TikTok Downloader Tool!', 'success');
+        }
+
+        // Drawer Navigation Functions
+        function openDrawer() {
+            const overlay = document.getElementById('drawer-overlay');
+            const content = document.getElementById('drawer-content');
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('translate-x-full');
+        }
+
+        function closeDrawer() {
+            const overlay = document.getElementById('drawer-overlay');
+            const content = document.getElementById('drawer-content');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.add('translate-x-full');
+        }
+
+        // Modal Helpers
+        function openModal(id) {
+            closeDrawer();
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // Paste Link from Clipboard
+        async function pasteFromClipboard() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    const text = await navigator.clipboard.readText();
+                    if (text) {
+                        document.getElementById('tiktok-url').value = text;
+                        showToast('Link pasted from clipboard', 'info');
+                    }
+                } else {
+                    showToast('Clipboard access not supported. Please paste manually.', 'warning');
+                }
+            } catch (err) {
+                showToast('Unable to read clipboard. Please paste manually.', 'warning');
             }
         }
 
-        // Theme Colors
-        function setThemeColor(color) {
-            // Can be extended or customized as needed
-            localStorage.setItem('site_theme', color);
-            alert('Theme accent updated successfully!');
-        }
+        // Form Submission & API Fetching
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const inputUrl = document.getElementById('tiktok-url').value.trim();
 
-        // Load saved preferences on start
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedTitle = localStorage.getItem('site_title');
-            if (savedTitle) {
-                document.getElementById('page-title').innerText = savedTitle;
-                document.getElementById('brand-title').innerText = savedTitle;
-                document.getElementById('custom-title-input').value = savedTitle;
-            }
-            const savedBg = localStorage.getItem('site_bg');
-            if (savedBg) {
-                document.getElementById('body-bg').style.backgroundImage = `linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.9)), url('${savedBg}')`;
-                document.getElementById('custom-bg-input').value = savedBg;
-            }
-        });
-
-        // TikTok Video Downloader using TikWM API
-        async function downloadVideo() {
-            const urlInput = document.getElementById('tiktok-url').value.trim();
-            if (!urlInput) {
-                alert('Please paste a valid TikTok video URL first!');
+            if (!inputUrl) {
+                showToast('Please enter a valid TikTok video URL', 'error');
                 return;
             }
 
-            const loading = document.getElementById('loading');
-            const resultContainer = document.getElementById('result-container');
-            const btnText = document.getElementById('btn-text');
-            const btnIcon = document.getElementById('btn-icon');
+            const downloadBtn = document.getElementById('download-btn');
+            const originalBtnHTML = downloadBtn.innerHTML;
 
-            // Show Loading
-            loading.classList.remove('hidden');
-            resultContainer.classList.add('hidden');
-            btnText.innerText = 'Processing...';
-            btnIcon.className = 'fa-solid fa-spinner fa-spin';
+            // Loading state
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = `<i class="fa-solid fa-spinner spinner"></i> FETCHING VIDEO DATA...`;
 
             try {
-                // Fetching from TikWM API
-                const apiURL = `https://tikwm.com/api/?url=${encodeURIComponent(urlInput)}`;
-                const response = await fetch(apiURL);
-                const data = await response.json();
+                // Call TikWM API
+                const apiEndpoint = `https://www.tikwm.com/api/?url=${encodeURIComponent(inputUrl)}`;
+                const response = await fetch(apiEndpoint);
+                const result = await response.json();
 
-                if (data.code === 0 && data.data) {
-                    const videoData = data.data;
+                if (result && result.code === 0 && result.data) {
+                    const data = result.data;
+                    currentFetchedData = data;
 
-                    // Populate Data
-                    document.getElementById('vid-cover').src = videoData.cover || videoData.origin_cover;
-                    document.getElementById('vid-title').innerText = videoData.title || 'TikTok Video';
-                    document.getElementById('author-avatar').src = videoData.author.avatar;
-                    document.getElementById('author-name').innerText = videoData.author.nickname;
-                    document.getElementById('author-id').innerText = `@${videoData.author.unique_id}`;
+                    // Display fetched results directly under input form
+                    renderResultCard(data);
+                    
+                    // Save to local storage history
+                    saveToHistory(data);
 
-                    // Set Download Links
-                    document.getElementById('download-nwm').href = videoData.play;
-                    document.getElementById('download-audio').href = videoData.music;
+                    showToast('Video data fetched successfully!', 'success');
 
-                    // Show Results
-                    resultContainer.classList.remove('hidden');
+                    // Scroll smoothly to results
+                    document.getElementById('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 } else {
-                    alert('Failed to fetch video. Please check the URL and try again.');
+                    showToast(result.msg || 'Failed to fetch video. Please check the URL.', 'error');
                 }
             } catch (error) {
                 console.error(error);
-                alert('An error occurred while connecting to the API. Please try again later.');
+                showToast('Error connecting to TikWM API server. Try again later.', 'error');
             } finally {
-                loading.classList.add('hidden');
-                btnText.innerText = 'Download Now';
-                btnIcon.className = 'fa-solid fa-download';
+                downloadBtn.disabled = false;
+                downloadBtn.innerHTML = originalBtnHTML;
             }
+        }
+
+        // Render Video Data to UI
+        function renderResultCard(data) {
+            const resultCard = document.getElementById('result-card');
+
+            // Set Account Details
+            const avatarImg = document.getElementById('author-avatar');
+            const nicknameEl = document.getElementById('author-nickname');
+            const usernameEl = document.getElementById('author-username');
+
+            avatarImg.src = data.author?.avatar || 'https://placehold.co/100x100/1e293b/06b6d4?text=User';
+            nicknameEl.textContent = data.author?.nickname || 'TikTok Creator';
+            usernameEl.textContent = `@${data.author?.unique_id || 'user'}`;
+
+            // Set Video Preview & Cover
+            document.getElementById('video-cover').src = data.cover || data.origin_cover || '';
+            document.getElementById('video-duration').textContent = formatDuration(data.duration || 0);
+
+            // Set Caption / Description
+            const captionText = data.title || 'No description provided for this video.';
+            document.getElementById('video-caption-text').textContent = captionText;
+
+            // Set Download Action Links
+            const noWatermarkBtn = document.getElementById('btn-no-watermark');
+            const watermarkBtn = document.getElementById('btn-watermark');
+            const audioBtn = document.getElementById('btn-audio');
+            const hdBtn = document.getElementById('btn-hd');
+
+            noWatermarkBtn.href = data.play || '#';
+            watermarkBtn.href = data.wmplay || data.play || '#';
+            audioBtn.href = data.music || '#';
+            hdBtn.href = data.hdplay || data.play || '#';
+
+            resultCard.classList.remove('hidden');
+        }
+
+        // Copy Caption Functionality
+        function copyCaptionText() {
+            const captionText = document.getElementById('video-caption-text').textContent;
+            if (!captionText) return;
+
+            copyToClipboardText(captionText);
+            showToast('Caption copied to clipboard!', 'success');
+
+            const checkIcon = document.getElementById('copy-check-icon');
+            if (checkIcon) {
+                checkIcon.classList.remove('hidden');
+                setTimeout(() => checkIcon.classList.add('hidden'), 2000);
+            }
+        }
+
+        // Helper: Format Seconds into mm:ss
+        function formatDuration(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Copy Helper for cross-iframe compatibility
+        function copyToClipboardText(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Copy fallback error', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // Download History Operations
+        function saveToHistory(data) {
+            let history = JSON.parse(localStorage.getItem('hassan_tiktok_history') || '[]');
+            
+            // Check if already exists in history by id or title
+            history = history.filter(item => item.id !== data.id);
+
+            // Push to beginning
+            history.unshift({
+                id: data.id || Date.now().toString(),
+                authorName: data.author?.nickname || 'TikTok User',
+                authorHandle: data.author?.unique_id || 'user',
+                authorAvatar: data.author?.avatar || '',
+                title: data.title || 'TikTok Video',
+                cover: data.cover || '',
+                play: data.play || '#',
+                wmplay: data.wmplay || '#',
+                music: data.music || '#',
+                hdplay: data.hdplay || '#',
+                timestamp: new Date().toLocaleDateString()
+            });
+
+            // Limit history to max 15 items
+            if (history.length > 15) history.pop();
+
+            localStorage.setItem('hassan_tiktok_history', JSON.stringify(history));
+            loadHistory();
+        }
+
+        function loadHistory() {
+            const historyContainer = document.getElementById('history-container');
+            const history = JSON.parse(localStorage.getItem('hassan_tiktok_history') || '[]');
+
+            if (history.length === 0) {
+                historyContainer.innerHTML = `
+                    <div id="empty-history-msg" class="text-center py-8 text-gray-500 text-xs">
+                        No recent downloads found. Links you download will appear here.
+                    </div>
+                `;
+                return;
+            }
+
+            historyContainer.innerHTML = history.map((item, index) => `
+                <div class="p-3.5 rounded-2xl bg-gray-900/80 border border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:border-gray-700 transition-all">
+                    <div class="flex items-center space-x-3 w-full sm:w-auto">
+                        <img src="${item.cover || 'https://placehold.co/100x100/1e293b/06b6d4?text=Video'}" class="w-12 h-12 rounded-xl object-cover border border-gray-700 shrink-0">
+                        <div class="overflow-hidden">
+                            <h4 class="text-xs font-bold text-white truncate max-w-[200px]">${escapeHtml(item.title)}</h4>
+                            <p class="text-[11px] text-gray-400">@${escapeHtml(item.authorHandle)} • ${item.timestamp}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end overflow-x-auto pt-1 sm:pt-0">
+                        <a href="${item.play}" target="_blank" download class="px-2.5 py-1.5 rounded-lg bg-emerald-600/80 hover:bg-emerald-600 text-white text-[11px] font-bold whitespace-nowrap">
+                            <i class="fa-solid fa-download mr-1"></i> No WM
+                        </a>
+                        <a href="${item.wmplay}" target="_blank" download class="px-2.5 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 text-[11px] font-bold whitespace-nowrap border border-gray-700">
+                            WM
+                        </a>
+                        <a href="${item.music}" target="_blank" download class="px-2.5 py-1.5 rounded-lg bg-purple-600/80 hover:bg-purple-600 text-white text-[11px] font-bold whitespace-nowrap">
+                            <i class="fa-solid fa-music"></i>
+                        </a>
+                        <button onclick="copyHistoryCaption('${index}')" class="px-2.5 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-cyan-400 text-[11px] font-bold whitespace-nowrap border border-cyan-500/20">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function copyHistoryCaption(index) {
+            const history = JSON.parse(localStorage.getItem('hassan_tiktok_history') || '[]');
+            if (history[index] && history[index].title) {
+                copyToClipboardText(history[index].title);
+                showToast('Caption copied from history!', 'success');
+            }
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('hassan_tiktok_history');
+            loadHistory();
+            showToast('Download history cleared', 'info');
+        }
+
+        function escapeHtml(text) {
+            return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // Custom Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            let typeClasses = 'bg-gray-900 border-gray-700 text-white';
+            let icon = 'fa-circle-info theme-text';
+
+            if (type === 'success') {
+                typeClasses = 'bg-emerald-950/90 border-emerald-600 text-emerald-200';
+                icon = 'fa-circle-check text-emerald-400';
+            } else if (type === 'error') {
+                typeClasses = 'bg-red-950/90 border-red-600 text-red-200';
+                icon = 'fa-circle-exclamation text-red-400';
+            } else if (type === 'warning') {
+                typeClasses = 'bg-amber-950/90 border-amber-600 text-amber-200';
+                icon = 'fa-triangle-exclamation text-amber-400';
+            }
+
+            toast.className = `p-3.5 rounded-2xl border text-xs font-semibold shadow-2xl flex items-center gap-2 pointer-events-auto transform transition-all duration-300 translate-y-[-10px] opacity-0 ${typeClasses}`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i> <span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            // Animate In
+            setTimeout(() => {
+                toast.classList.remove('translate-y-[-10px]', 'opacity-0');
+            }, 10);
+
+            // Auto Remove After 3 seconds
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-[-10px]');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
     </script>
 </body>
